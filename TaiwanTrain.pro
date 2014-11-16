@@ -4,14 +4,17 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT			+= core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = TaiwanTrain
-TEMPLATE = app
+TARGET		= TaiwanTrain
+TEMPLATE	= app
+
 INCLUDEPATH += /usr/include/boost_1_57_0
-LIBS += -L/usr/lib/boost_lib -lboost_system
+LIBS		+= -L /usr/lib/boost_lib -lboost_system
+CONFIG		+= boost
+DEFINES		+= STATIC
 
 SOURCES += src/main.cpp\
 		   src/mainwindow.cpp

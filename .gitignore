@@ -1,0 +1,5 @@
+## ignore file list
+
+*.o
+moc_mainwindow.cpp
+ui_mainwindow.h

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QDebug>
 
 namespace Ui {
 class MainWindow;
@@ -15,8 +16,30 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    Ui::MainWindow *get_ui_ptr(){return ui;} ;
+
+private slots:
+    void on_GO_btn_clicked();
+
+    void on_THSR_btn_clicked();
+
+    void on_TRA_btn_clicked();
+
+    void on_TRTC_btn_clicked();
+
+    void on_KRTC_btn_clicked();
+
+    void on_Refresh_btn_clicked();
+
 private:
     Ui::MainWindow *ui;
+    /*
+    QButtonGroup *btn_grp ;
+    QPushButton *TRA_btn;
+    QPushButton *TRTC_btn;
+    QPushButton *KRTC_btn;
+    QPushButton *THSR_btn;
+    */
 };
 
 #endif // MAINWINDOW_H
