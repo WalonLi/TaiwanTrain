@@ -1,5 +1,10 @@
+
+
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "ITrainBase.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -24,6 +29,10 @@ void MainWindow::on_GO_btn_clicked()
 
 void MainWindow::on_THSR_btn_clicked()
 {
+    ttp::STATE st = ttp::STATE_ERROR ;
+    ttp::ITrainBase base;
+    // st = base.connect_server(30) ;
+    qDebug() << st << endl;
 }
 
 void MainWindow::on_TRA_btn_clicked()

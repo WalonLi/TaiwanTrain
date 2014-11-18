@@ -19,6 +19,9 @@ DEFINES		+= STATIC
 SOURCES += src/main.cpp\
 		   src/mainwindow.cpp
 
-HEADERS  += src/mainwindow.h
+HEADERS  += src/mainwindow.h \
+    src/ITrainBase.h \
+    src/state.h \
+    src/Train.h
 
 FORMS    += UI/mainwindow.ui

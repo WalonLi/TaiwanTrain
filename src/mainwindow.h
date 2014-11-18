@@ -33,13 +33,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    /*
-    QButtonGroup *btn_grp ;
-    QPushButton *TRA_btn;
-    QPushButton *TRTC_btn;
-    QPushButton *KRTC_btn;
-    QPushButton *THSR_btn;
-    */
+
 };
 
 #endif // MAINWINDOW_H
