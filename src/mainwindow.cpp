@@ -3,8 +3,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "ITrainBase.h"
-#include <QDebug>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -22,6 +21,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+void MainWindow::show_popup_error_message(ttp::STATE)
+{
+    qDebug() << "ERROR" << endl ;
+}
+
 void MainWindow::on_GO_btn_clicked()
 {
 }
@@ -29,10 +34,15 @@ void MainWindow::on_GO_btn_clicked()
 
 void MainWindow::on_THSR_btn_clicked()
 {
-    ttp::STATE st = ttp::STATE_ERROR ;
-    ttp::ITrainBase base;
-    // st = base.connect_server(30) ;
-    qDebug() << st << endl;
+    ttp::STATE state ;
+    ttp::THSR train ;
+
+    state = train.parse_data_from_web();
+    if (state != ttp::STATE_SUCCESS)
+    {
+        show_popup_error_message(state) ;
+        return ;
+    }
 }
 
 void MainWindow::on_TRA_btn_clicked()

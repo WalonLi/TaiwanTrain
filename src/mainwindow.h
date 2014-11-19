@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QDebug>
+#include "ITrainBase.h"
+#include "THSR/THSR.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,6 +21,8 @@ public:
     Ui::MainWindow *get_ui_ptr(){return ui;} ;
 
 private slots:
+    void show_popup_error_message(ttp::STATE) ;
+
     void on_GO_btn_clicked();
 
     void on_THSR_btn_clicked();

@@ -43,7 +43,8 @@ public:
 
     STATE add_data_into_train(const pair<station, time> d)
     {
-        if (d.first.empty()) return STATE_ERROR ;
+        if (d.first.empty())
+            return STATE_ERROR ;
         else
         {
             data.push_back(d);

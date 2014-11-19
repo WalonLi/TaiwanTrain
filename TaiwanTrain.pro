@@ -17,11 +17,13 @@ CONFIG		+= boost
 DEFINES		+= STATIC
 
 SOURCES += src/main.cpp\
-		   src/mainwindow.cpp
+		   src/mainwindow.cpp \
+    src/THSR/THSR.cpp
 
 HEADERS  += src/mainwindow.h \
     src/ITrainBase.h \
     src/state.h \
-    src/Train.h
+    src/Train.h \
+    src/THSR/THSR.h
 
 FORMS    += UI/mainwindow.ui
