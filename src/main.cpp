@@ -1,3 +1,9 @@
+/**
+    Provide by Walon Li
+
+    File: THSR.h
+**/
+
 #include "mainwindow.h"
 #include <QApplication>
 #include <QDesktopWidget>

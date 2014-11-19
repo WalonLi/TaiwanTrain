@@ -9,7 +9,7 @@
 
 #include <string>
 #include "boost/asio.hpp"
-#include "state.h"
+#include "basic.h"
 #include "Train.h"
 
 
@@ -34,7 +34,7 @@ protected:
     // add train into table
     STATE add_train_into_table(const Train t)
     {
-        if (!t) return STATE_ERROR ;
+        if (!t) return STATE_DATA_ERROR ;
         else
         {
             table.push_back(t) ;

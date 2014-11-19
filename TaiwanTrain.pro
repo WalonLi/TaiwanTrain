@@ -13,7 +13,7 @@ TEMPLATE	= app
 
 INCLUDEPATH += /usr/include/boost_1_57_0
 LIBS		+= -L /usr/lib/boost_lib -lboost_system
-CONFIG		+= boost
+CONFIG		+= boost c++11
 DEFINES		+= STATIC
 
 SOURCES += src/main.cpp\
@@ -22,8 +22,8 @@ SOURCES += src/main.cpp\
 
 HEADERS  += src/mainwindow.h \
     src/ITrainBase.h \
-    src/state.h \
     src/Train.h \
-    src/THSR/THSR.h
+    src/THSR/THSR.h \
+    src/basic.h
 
 FORMS    += UI/mainwindow.ui

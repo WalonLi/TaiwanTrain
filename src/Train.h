@@ -8,7 +8,8 @@
 
 #include <string>
 #include <vector>
-#include "state.h"
+#include <QTime>
+#include "basic.h"
 
 using std::string ;
 using std::vector ;
@@ -23,8 +24,8 @@ public:
     explicit Train( const string & t, const string & h) : id(t), help(h) { data.clear(); }
     ~Train(){}
 
-    typedef string station ;
-    typedef string time ;
+    typedef string arrival_station ;
+    typedef QTime arrival_time ;
 
     // operator overload check
     bool operator !()
@@ -39,12 +40,12 @@ public:
 
     const string & get_id() { return id ; }
     const string & get_help() { return help ;}
-    const vector< pair<station, time> > & get_data() { return data ;}
+    const vector< pair<arrival_station, arrival_time> > & get_data() { return data ;}
 
-    STATE add_data_into_train(const pair<station, time> d)
+    STATE add_data_into_train(const pair<arrival_station, arrival_time> d)
     {
         if (d.first.empty())
-            return STATE_ERROR ;
+            return STATE_DATA_ERROR ;
         else
         {
             data.push_back(d);
@@ -55,7 +56,7 @@ public:
 private:
     string id ;
     string help ;
-    vector< pair<station, time> > data;
+    vector< pair<arrival_station, arrival_time> > data;
 };
 
 }

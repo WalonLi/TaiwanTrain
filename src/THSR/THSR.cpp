@@ -14,9 +14,14 @@ STATE THSR::parse_data_from_web()
 {
     vector<string> pages = get_web_pages() ;
 
+    const string match_pattern("<tr bgcolor=\"") ;
+    const string data_pre_pattern("<td title=\"");
+    const string data_mid_pattern("\">") ;
+    const string data_pos_pattern("</td>") ;
+    const string data_end_pattern("<td title=\"\"><\/td>>") ;
 
-    for(vector<string>::iterator page_it = pages.begin() ;
-        page_it != pages.end() ; ++page_it)
+
+    for(auto page_it = pages.begin() ; page_it != pages.end() ; ++page_it)
     {
         // Try to connect page.
         if (connect_server(30) != STATE_SUCCESS)
@@ -34,7 +39,7 @@ STATE THSR::parse_data_from_web()
 
 
         // Recieve header and check is invalid or not.
-        string mHttpVer, mHttpData ;
+        string mHttpVer, data ;
         u_int mHttpCode ;
 
         stream >> mHttpVer >> mHttpCode ;
@@ -47,23 +52,49 @@ STATE THSR::parse_data_from_web()
 
         std::stringstream web_stream ;
         web_stream << stream.rdbuf() ;
-        while (std::getline(web_stream, mHttpData))
+        while (std::getline(web_stream, data))
         {
-            qDebug() << mHttpData.c_str() ;
+            // clean white space
+            data = ttp::trim(data) ;
+            if (data.empty() || data.size() < match_pattern.size())
+                continue ;
+
+
+            // match pattern "<tr bgcolor"
+            if (!data.substr(0, match_pattern.size()).compare(match_pattern))
+            {
+                std::getline(web_stream, data) ;
+                data = ttp::trim(data) ;
+
+                // generate Train object.
+                Train train(data.substr(4, 4), "") ;
+
+                while(std::getline(web_stream, data))
+                {
+                    data = ttp::trim(data) ;
+                    if (data.empty() || data.size() < data_end_pattern.size()) break;
+
+                    string station(data.substr(11, 9)) ;
+                    QTime *time ;
+                    if (data.at(23) == '-')
+                        time = new QTime(0,0) ;
+                    else
+                        time = new QTime(atoi(data.substr(22,2).c_str()),
+                                         atoi(data.substr(25,2).c_str())) ;
+
+                    // add data to train
+                    pair<string, QTime> p(station, *time) ;
+                    train.add_data_into_train(p) ;
+                    delete time ;
+                }
+
+                this->add_train_into_table(train) ;
+            }
         }
 
         stream.close();
     }
 
-
-    /*
-
-    std::stringstream ostream ;
-    ostream << stream.rdbuf() ;
-
-    string html = ostream.str() ;
-    qDebug() << html.c_str() << endl ;
-    */
     return STATE_SUCCESS ;
 }
 
