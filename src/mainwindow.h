@@ -21,8 +21,7 @@ public:
     Ui::MainWindow *get_ui_ptr(){return ui;} ;
 
 private slots:
-    void show_popup_error_message(ttp::STATE) ;
-
+    // button click signal function
     void on_GO_btn_clicked();
 
     void on_THSR_btn_clicked();
@@ -35,9 +34,18 @@ private slots:
 
     void on_Refresh_btn_clicked();
 
-private:
-    Ui::MainWindow *ui;
+private :
+    // member function
+    void show_popup_error_message(ttp::STATE) ;
 
+    void refresh_start_station_combobox() ;
+
+    void refresh_arrival_station_combobox() ;
+
+private:
+    // member
+    Ui::MainWindow *ui;
+    ttp::ITrainBase *instance;
 };
 
 #endif // MAINWINDOW_H

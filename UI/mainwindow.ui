@@ -158,7 +158,7 @@
      <set>Qt::LinksAccessibleByMouse</set>
     </property>
    </widget>
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QGroupBox" name="btn_group_box">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -168,7 +168,7 @@
      </rect>
     </property>
     <property name="title">
-     <string>Train</string>
+     <string/>
     </property>
     <widget class="QRadioButton" name="THSR_btn">
      <property name="geometry">

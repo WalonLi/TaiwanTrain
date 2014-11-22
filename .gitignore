@@ -5,4 +5,5 @@ moc_mainwindow.cpp
 ui_mainwindow.h
 TaiwanTrain
 Makefile
+TaiwanTrain.pro.user
 

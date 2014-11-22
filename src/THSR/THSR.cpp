@@ -68,7 +68,6 @@ STATE THSR::parse_data_from_web()
 
                 // generate Train object.
                 Train train(data.substr(4, 4), "") ;
-
                 while(std::getline(web_stream, data))
                 {
                     data = ttp::trim(data) ;
@@ -84,7 +83,10 @@ STATE THSR::parse_data_from_web()
 
                     // add data to train
                     pair<string, QTime> p(station, *time) ;
-                    train.add_data_into_train(p) ;
+                    train.add_time_into_schedule(p) ;
+
+                    // help to generate station map.
+                    this->add_station_into_map(station) ;
                     delete time ;
                 }
 

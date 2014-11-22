@@ -26,29 +26,39 @@ public:
     const vector<Train> & get_table() { return table; }
     const string & get_web_server() { return web_server; }
     const vector<string> & get_web_pages() { return web_pages; }
+    const vector<string> & get_station_map() { return station_map ; }
 
     // paring data method
     virtual STATE parse_data_from_web() = 0 ;
 
 protected:
-    // add train into table
-    STATE add_train_into_table(const Train t)
-    {
-        if (!t) return STATE_DATA_ERROR ;
-        else
-        {
-            table.push_back(t) ;
-            return STATE_SUCCESS ;
-        }
-    }
+    // get asio stream
+    boost::asio::ip::tcp::iostream & get_stream() { return asio_stream; }
 
     // add page into pages
     void add_page_into_pages(const string a){ web_pages.push_back(a); }
 
+    STATE add_station_into_map(const string s)
+    {
+        if (s.empty()) return STATE_DATA_ERROR ;
 
-    // asio function
-    boost::asio::ip::tcp::iostream & get_stream() { return asio_stream; }
-    // try to connect server.
+        for (auto it = station_map.begin() ; it != station_map.end() ; ++it)
+            if (!(*it).compare(s)) return STATE_SUCCESS ;
+
+        station_map.push_back(s);
+        return STATE_SUCCESS ;
+    }
+
+    // add train into table
+    STATE add_train_into_table(const Train t)
+    {
+        if (!t) return STATE_DATA_ERROR ;
+
+        table.push_back(t) ;
+        return STATE_SUCCESS ;
+    }  
+
+    // connect server.
     virtual STATE connect_server( const int time_out = 30 )
     {
         if (!time_out) return STATE_NETWORK_ERROR ;
@@ -63,6 +73,7 @@ protected:
 
 private:
     boost::asio::ip::tcp::iostream asio_stream ;
+    vector<string> station_map ;
     vector<Train> table ;
     string web_server ;
     vector<string> web_pages ;
