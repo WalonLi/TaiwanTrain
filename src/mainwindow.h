@@ -42,6 +42,8 @@ private :
 
     void refresh_arrival_station_combobox() ;
 
+    ttp::STATE update_train_list_content() ;
+
 private:
     // member
     Ui::MainWindow *ui;

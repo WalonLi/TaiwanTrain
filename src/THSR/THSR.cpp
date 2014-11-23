@@ -75,8 +75,8 @@ STATE THSR::parse_data_from_web()
 
                     string station(data.substr(11, 9)) ;
                     QTime *time ;
-                    if (data.at(23) == '-')
-                        time = new QTime(0,0) ;
+                    if (data.at(22) == '-')
+                        time = new QTime() ;
                     else
                         time = new QTime(atoi(data.substr(22,2).c_str()),
                                          atoi(data.substr(25,2).c_str())) ;

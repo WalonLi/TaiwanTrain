@@ -41,7 +41,7 @@ public:
 
     const string & get_id() { return id ; }
     const string & get_help() { return help ;}
-    const vector< pair<arrival_station, arrival_time> > & get_data() { return schedule ;}
+    const vector< pair<arrival_station, arrival_time> > & get_schedule() { return schedule ;}
 
     STATE add_time_into_schedule(const pair<arrival_station, arrival_time> d)
     {

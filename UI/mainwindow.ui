@@ -223,7 +223,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QListWidget" name="train_list_widget">
     <property name="geometry">
      <rect>
       <x>160</x>

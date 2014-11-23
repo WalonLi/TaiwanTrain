@@ -22,7 +22,7 @@ enum STATE
 };
 
 #define CHECK_SUCCESS(x) ((x==STATE_SUCCESS) ? true : false)
-
+#define IS_LEGAL_TIME(x) ((x.hour() >= 24 && x.minute() >= 0) ? false : true)
 
 static std::string & trim(std::string & s)
 {
