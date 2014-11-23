@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>鐵路查詢表</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QPushButton" name="Refresh_btn">

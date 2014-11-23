@@ -6,6 +6,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QMessageBox>
 
 using namespace ttp ;
 
@@ -28,9 +29,41 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::show_popup_error_message(STATE)
+void MainWindow::show_popup_error_message(STATE st)
 {
-    qDebug() << "ERROR" << endl ;
+    QMessageBox *msg = 0 ;
+
+    switch(st)
+    {
+    case STATE_DATA_ERROR :
+        msg = new QMessageBox(QMessageBox::Warning,
+                              "Data",
+                              "資料錯誤。") ;
+        break ;
+    case STATE_DATE_TIME_ERROR :
+        msg = new QMessageBox(QMessageBox::Warning,
+                              "Date",
+                              "請選擇正確的日期。") ;
+        break ;
+    case STATE_NETWORK_ERROR :
+        msg = new QMessageBox(QMessageBox::Warning,
+                              "Network",
+                              "網路阻塞，請重新連線或者檢查您的網路。") ;
+        break ;
+    case STATE_SELECT_TRAIN_ERROR :
+        msg = new QMessageBox(QMessageBox::Warning,
+                              "Type",
+                              "請於左方Menu選擇車種。") ;
+        break ;
+    case STATE_START_ARRIVE_IS_SAME_ERROR :
+        msg = new QMessageBox(QMessageBox::Warning,
+                              "Start/Arrival",
+                              "起始站和抵達站無法相同。") ;
+        break ;
+    }
+
+    msg->exec() ;
+    delete msg ;
 }
 
 void MainWindow::refresh_start_station_combobox()
@@ -63,13 +96,13 @@ void MainWindow::on_GO_btn_clicked()
     if (!ui->btn_group_box->focusWidget())
         return show_popup_error_message(STATE_SELECT_TRAIN_ERROR) ;
 
-    // check combo box
-    if (ui->start_combo_box->currentText() == ui->arrival_combo_box->currentText())
-        return show_popup_error_message(STATE_START_ARRIVE_IS_SAME_ERROR) ;
-
     // check instance
     if (!instance)
         return show_popup_error_message(STATE_DATA_ERROR) ;
+
+    // check combo box
+    if (ui->start_combo_box->currentText() == ui->arrival_combo_box->currentText())
+        return show_popup_error_message(STATE_START_ARRIVE_IS_SAME_ERROR) ;
 
 }
 
@@ -148,4 +181,9 @@ void MainWindow::on_Refresh_btn_clicked()
     instance = 0 ;
     refresh_start_station_combobox() ;
     refresh_arrival_station_combobox() ;
+}
+
+void MainWindow::on_EXIT_btn_clicked()
+{
+    QApplication::quit() ;
 }

@@ -34,9 +34,11 @@ private slots:
 
     void on_Refresh_btn_clicked();
 
+    void on_EXIT_btn_clicked();
+
 private :
     // member function
-    void show_popup_error_message(ttp::STATE) ;
+    void show_popup_error_message(ttp::STATE st) ;
 
     void refresh_start_station_combobox() ;
 
