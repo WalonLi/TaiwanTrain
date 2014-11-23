@@ -6,6 +6,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "boost/format.hpp"
 
 using namespace ttp ;
 
@@ -57,9 +58,9 @@ STATE MainWindow::update_train_list_content()
 {
     string start_station = ui->start_combo_box->currentText().toStdString() ;
     string arrival_station = ui->arrival_combo_box->currentText().toStdString() ;
-
-
     vector<Train> table = instance->get_table() ;
+
+    ui->train_list_widget->clear();
     for (auto it = table.begin() ; it != table.end() ; ++it)
     {
         QTime *start_time = 0, *arrival_time = 0 ;
@@ -79,9 +80,12 @@ STATE MainWindow::update_train_list_content()
 
         if (start_time && arrival_time)
         {
-
-            // ui->train_list_widget->add
-            // qDebug() << *start_time << " " << *arrival_time ;
+            string str = (boost::format("車號:%-10s出發:%-10s抵達:%-10s%s") \
+                                        % it->get_id().c_str() \
+                                        % start_time->toString("hh:mm").toStdString().c_str() \
+                                        % arrival_time->toString("hh:mm").toStdString().c_str()\
+                                        % it->get_help().c_str()).str() ;
+            ui->train_list_widget->addItem(str.c_str()) ;
         }
 
         delete start_time ;

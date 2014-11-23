@@ -232,6 +232,11 @@
       <height>491</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>13</pointsize>
+     </font>
+    </property>
    </widget>
   </widget>
  </widget>
