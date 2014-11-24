@@ -7,6 +7,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
+#include <QGraphicsView>
+#include <QVBoxLayout>
+#include <QGraphicsScene>
+#include <QTimeLine>
+
 
 using namespace ttp ;
 
@@ -15,11 +20,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     instance(0)
 {
+
+
     this->setFixedSize(800,600);
     ui->setupUi(this);
 
     // set default date is current date.
     ui->date_edit_box->setDate(QDate::currentDate());
+    // while(true) qDebug() <<"123";
 }
 
 MainWindow::~MainWindow()
@@ -175,15 +183,62 @@ void MainWindow::on_KRTC_btn_clicked()
 
 void MainWindow::on_Refresh_btn_clicked()
 {
+
     STATE state ;
     if (instance) delete instance ;
 
     instance = 0 ;
     refresh_start_station_combobox() ;
     refresh_arrival_station_combobox() ;
+
+    pop_up_spinner_bar() ;
 }
 
 void MainWindow::on_EXIT_btn_clicked()
 {
     QApplication::quit() ;
+}
+
+void MainWindow::rotate_spinner(int v)
+{
+    qreal nTransX = m_pBusyIndicator->actualOuterRadius();
+    m_pBusyIndicator->setTransform(QTransform().translate(nTransX, nTransX).
+                        rotate(v*10).translate(-1*nTransX, -1*nTransX));
+}
+
+void MainWindow::pop_up_spinner_bar()
+{
+    QTimeLine* m_pTimeLine = NULL;
+
+    QLayout* pLayout = new QVBoxLayout();
+
+    QGraphicsScene* pScene = new QGraphicsScene();
+
+    m_pBusyIndicator = new BusyIndicator();
+    pScene->addItem(dynamic_cast<QGraphicsItem*>(m_pBusyIndicator));
+    // QGraphicsScene* m_scene = NULL;
+
+
+    QGraphicsView* pView = new QGraphicsView(pScene, this);
+
+    pView->setMinimumHeight(100);
+    pView->setMinimumWidth(100);
+
+    // None bolder style
+    pView->setWindowFlags(Qt::FramelessWindowHint);
+    pView->setStyleSheet("background: transparent;border:Opx");
+    // pView->setAttribute(Qt::WA_TranslucentBackground);
+
+    pView->move((this->width()-pView->width())/2,(this->height()-pView->height())/2);
+    pView->show();
+
+    pLayout->addWidget(pView);
+    // setLayout(pLayout);
+
+    m_pTimeLine = new QTimeLine(1000, this);
+    m_pTimeLine->setLoopCount(0);
+    m_pTimeLine->setFrameRange(0, 36);
+
+    connect(m_pTimeLine, SIGNAL(frameChanged(int)), this, SLOT(rotate_spinner(int)));
+    m_pTimeLine->start();
 }

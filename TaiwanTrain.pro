@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT			+= core gui
+QT			+= core gui declarative
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,13 +17,17 @@ CONFIG		+= c++11
 DEFINES		+= STATIC
 
 SOURCES += src/main.cpp\
-		   src/mainwindow.cpp \
-    src/THSR/THSR.cpp
+           src/mainwindow.cpp\
+           src/THSR/THSR.cpp\
+           src/SpinBar/busyindicator.cpp
 
-HEADERS  += src/mainwindow.h \
-    src/ITrainBase.h \
-    src/Train.h \
-    src/THSR/THSR.h \
-    src/basic.h
+HEADERS  += src/mainwindow.h\
+            src/ITrainBase.h\
+            src/Train.h\
+            src/THSR/THSR.h\
+            src/basic.h\
+            src/SpinBar/busyindicator.h
 
 FORMS    += UI/mainwindow.ui
+
+OTHER_FILES +=
