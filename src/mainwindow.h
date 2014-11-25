@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QDebug>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QTimeLine>
 #include "ITrainBase.h"
 #include "THSR/THSR.h"
 #include "SpinBar/busyindicator.h"
@@ -60,6 +63,8 @@ private:
     Ui::MainWindow *ui;
     ttp::ITrainBase *instance;
     BusyIndicator* m_pBusyIndicator;
+    QGraphicsView* pView ;
+    QTimeLine* m_pTimeLine;
 };
 
 #endif // MAINWINDOW_H

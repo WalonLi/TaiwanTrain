@@ -11,7 +11,11 @@
 #include <QVBoxLayout>
 #include <QGraphicsScene>
 #include <QTimeLine>
+#include <QMutex>
+#include <QtTest/QTest>
 
+
+QMutex mutex;
 
 using namespace ttp ;
 
@@ -117,8 +121,11 @@ void MainWindow::on_GO_btn_clicked()
 
 void MainWindow::on_THSR_btn_clicked()
 {
+    mutex.lock();
     STATE state ;
     if (instance) delete instance ;
+
+    pop_up_spinner_bar() ;
 
     instance = new THSR() ;
     state = instance->parse_data_from_web() ;
@@ -128,26 +135,12 @@ void MainWindow::on_THSR_btn_clicked()
     refresh_start_station_combobox() ;
     refresh_arrival_station_combobox() ;
 
-    /*
-    vector<string> t = instance->get_station_map() ;
-    for (auto it = t.begin() ; it != t.end() ; ++it )
-    {
-        qDebug() << (*it).c_str() ;
-    }
-    */
-    /*
-    vector<ttp::Train> t = mTHSR.get_table() ;
-    for (auto it = t.begin() ; it != t.end() ; ++it)
-    {
-        qDebug() << (*it).get_id().c_str() ;
-        vector< pair<string, QTime> > t2 = (*it).get_data() ;
 
-        for(auto it2 = t2.begin() ; it2 != t2.end() ; ++it2 )
-        {
-            qDebug() << (*it2).first.c_str() << " " << (*it2).second ;
-        }
-    }
-    */
+    pView->close() ;
+    m_pTimeLine->stop();
+    delete pView ;
+    delete m_pTimeLine ;
+    mutex.unlock();
 }
 
 void MainWindow::on_TRA_btn_clicked()
@@ -179,6 +172,7 @@ void MainWindow::on_KRTC_btn_clicked()
     instance = 0 ;
     refresh_start_station_combobox() ;
     refresh_arrival_station_combobox() ;
+
 }
 
 void MainWindow::on_Refresh_btn_clicked()
@@ -191,7 +185,9 @@ void MainWindow::on_Refresh_btn_clicked()
     refresh_start_station_combobox() ;
     refresh_arrival_station_combobox() ;
 
+    mutex.lock();
     pop_up_spinner_bar() ;
+    mutex.unlock();
 }
 
 void MainWindow::on_EXIT_btn_clicked()
@@ -208,18 +204,13 @@ void MainWindow::rotate_spinner(int v)
 
 void MainWindow::pop_up_spinner_bar()
 {
-    QTimeLine* m_pTimeLine = NULL;
-
-    QLayout* pLayout = new QVBoxLayout();
-
     QGraphicsScene* pScene = new QGraphicsScene();
 
     m_pBusyIndicator = new BusyIndicator();
     pScene->addItem(dynamic_cast<QGraphicsItem*>(m_pBusyIndicator));
     // QGraphicsScene* m_scene = NULL;
 
-
-    QGraphicsView* pView = new QGraphicsView(pScene, this);
+    pView = new QGraphicsView(pScene, this);
 
     pView->setMinimumHeight(100);
     pView->setMinimumWidth(100);
@@ -232,7 +223,7 @@ void MainWindow::pop_up_spinner_bar()
     pView->move((this->width()-pView->width())/2,(this->height()-pView->height())/2);
     pView->show();
 
-    pLayout->addWidget(pView);
+    // pLayout->addWidget(pView);
     // setLayout(pLayout);
 
     m_pTimeLine = new QTimeLine(1000, this);
@@ -241,4 +232,6 @@ void MainWindow::pop_up_spinner_bar()
 
     connect(m_pTimeLine, SIGNAL(frameChanged(int)), this, SLOT(rotate_spinner(int)));
     m_pTimeLine->start();
+
+    QTest::qWait(1500) ;
 }

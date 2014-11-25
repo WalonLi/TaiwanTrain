@@ -13,7 +13,7 @@ TEMPLATE	= app
 
 INCLUDEPATH += /usr/include/boost_1_57_0
 LIBS		+= -L /usr/lib/boost_lib -lboost_system
-CONFIG		+= c++11
+CONFIG		+= c++11 qtestlib
 DEFINES		+= STATIC
 
 SOURCES += src/main.cpp\
