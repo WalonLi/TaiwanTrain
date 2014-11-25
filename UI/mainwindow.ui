@@ -223,7 +223,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QListWidget" name="train_list_widget">
     <property name="geometry">
      <rect>
       <x>160</x>
@@ -231,6 +231,11 @@
       <width>631</width>
       <height>491</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>13</pointsize>
+     </font>
     </property>
    </widget>
   </widget>

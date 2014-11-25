@@ -6,6 +6,8 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "boost/format.hpp"
+
 #include <QMessageBox>
 #include <QGraphicsView>
 #include <QVBoxLayout>
@@ -98,8 +100,51 @@ void MainWindow::refresh_arrival_station_combobox()
         ui->arrival_combo_box->addItem((*it).c_str());
 }
 
+STATE MainWindow::update_train_list_content()
+{
+    string start_station = ui->start_combo_box->currentText().toStdString() ;
+    string arrival_station = ui->arrival_combo_box->currentText().toStdString() ;
+    vector<Train> table = instance->get_table() ;
+
+    ui->train_list_widget->clear();
+    for (auto it = table.begin() ; it != table.end() ; ++it)
+    {
+        QTime *start_time = 0, *arrival_time = 0 ;
+        vector< pair<string, QTime> > schedule = (*it).get_schedule() ;
+        for (auto it2 = schedule.begin() ; it2 != schedule.end() ; ++it2)
+        {
+            // check time is legal.
+            if ((*it2).second.isNull()) continue ;
+
+            if (!(*it2).first.compare(start_station))
+                start_time = new QTime((*it2).second) ;
+            else if (!(*it2).first.compare(arrival_station) && start_time)
+                arrival_time = new QTime((*it2).second) ;
+
+            if (start_time && arrival_time) break ;
+        }
+
+        if (start_time && arrival_time)
+        {
+            string str = (boost::format("車號:%-10s出發:%-10s抵達:%-10s%s") \
+                                        % it->get_id().c_str() \
+                                        % start_time->toString("hh:mm").toStdString().c_str() \
+                                        % arrival_time->toString("hh:mm").toStdString().c_str()\
+                                        % it->get_help().c_str()).str() ;
+            ui->train_list_widget->addItem(str.c_str()) ;
+        }
+
+        delete start_time ;
+        delete arrival_time ;
+    }
+
+    return STATE_SUCCESS ;
+}
+
 void MainWindow::on_GO_btn_clicked()
 {
+    STATE state ;
+
     // check date
     if (ui->date_edit_box->date() < QDate::currentDate())
         return show_popup_error_message(STATE_DATE_TIME_ERROR) ;
@@ -115,6 +160,10 @@ void MainWindow::on_GO_btn_clicked()
     // check combo box
     if (ui->start_combo_box->currentText() == ui->arrival_combo_box->currentText())
         return show_popup_error_message(STATE_START_ARRIVE_IS_SAME_ERROR) ;
+
+    state = update_train_list_content() ;
+    if (state != STATE_SUCCESS)
+        return show_popup_error_message(state) ;
 
 }
 

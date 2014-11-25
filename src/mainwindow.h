@@ -58,6 +58,9 @@ private :
 
     void pop_up_spinner_bar() ;
 
+    ttp::STATE update_train_list_content() ;
+
+
 private:
     // member
     Ui::MainWindow *ui;
