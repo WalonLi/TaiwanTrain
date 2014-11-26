@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT			+= core gui declarative
+QT			+= core gui declarative testlib widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,7 +13,7 @@ TEMPLATE	= app
 
 INCLUDEPATH += /usr/include/boost_1_57_0
 LIBS		+= -L /usr/lib/boost_lib -lboost_system
-CONFIG		+= c++11 qtestlib
+CONFIG		+= c++11
 DEFINES		+= STATIC
 
 SOURCES += src/main.cpp\
@@ -26,7 +26,8 @@ HEADERS  += src/mainwindow.h\
             src/Train.h\
             src/THSR/THSR.h\
             src/basic.h\
-            src/SpinBar/busyindicator.h
+            src/SpinBar/busyindicator.h \
+    src/SpinBar/spinbar.h
 
 FORMS    += UI/mainwindow.ui
 
