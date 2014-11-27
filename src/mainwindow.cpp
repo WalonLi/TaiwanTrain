@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     instance(0)
 {
 
-
+    spinbar = new SpinBar(this) ;
     this->setFixedSize(800,600);
     ui->setupUi(this);
 
@@ -33,11 +33,14 @@ MainWindow::~MainWindow()
 {
     delete ui ;
     delete instance ;
+    delete spinbar ;
 }
 
 
 void MainWindow::show_popup_error_message(STATE st)
 {
+    spinbar->close_spin_loading_bar();
+
     QMessageBox *msg = 0 ;
 
     switch(st)
@@ -163,13 +166,10 @@ void MainWindow::on_GO_btn_clicked()
 
 void MainWindow::on_THSR_btn_clicked()
 {
-    SpinBar spin(this) ;
-    spin.pop_up_spin_loading_bar();
+    spinbar->pop_up_spin_loading_bar();
 
     STATE state ;
     if (instance) delete instance ;
-
-    // pop_up_spinner_bar() ;
 
     instance = new THSR() ;
     state = instance->parse_data_from_web() ;
@@ -179,13 +179,12 @@ void MainWindow::on_THSR_btn_clicked()
     refresh_start_station_combobox() ;
     refresh_arrival_station_combobox() ;
 
-    spin.close_spin_loading_bar();
+    spinbar->close_spin_loading_bar();
 }
 
 void MainWindow::on_TRA_btn_clicked()
 {
-    // shield all action
-    this->setEnabled(false);
+    spinbar->pop_up_spin_loading_bar();
 
     STATE state ;
     if (instance) delete instance ;
@@ -194,13 +193,12 @@ void MainWindow::on_TRA_btn_clicked()
     refresh_start_station_combobox() ;
     refresh_arrival_station_combobox() ;
 
-    this->setEnabled(true);
+    spinbar->close_spin_loading_bar();
 }
 
 void MainWindow::on_TRTC_btn_clicked()
 {
-    // shield all action
-    this->setEnabled(false);
+    spinbar->pop_up_spin_loading_bar() ;
 
     STATE state ;
     if (instance) delete instance ;
@@ -209,13 +207,12 @@ void MainWindow::on_TRTC_btn_clicked()
     refresh_start_station_combobox() ;
     refresh_arrival_station_combobox() ;
 
-    this->setEnabled(true);
+    spinbar->close_spin_loading_bar();
 }
 
 void MainWindow::on_KRTC_btn_clicked()
 {
-    // shield all action
-    this->setEnabled(false);
+    spinbar->pop_up_spin_loading_bar() ;
 
     STATE state ;
     if (instance) delete instance ;
@@ -224,14 +221,12 @@ void MainWindow::on_KRTC_btn_clicked()
     refresh_start_station_combobox() ;
     refresh_arrival_station_combobox() ;
 
-    this->setEnabled(true);
+    spinbar->close_spin_loading_bar();
 }
 
 void MainWindow::on_Refresh_btn_clicked()
 {
-    // shield all action
-    this->setEnabled(false);
-    // pop_up_spinner_bar() ;
+    spinbar->pop_up_spin_loading_bar() ;
 
     STATE state ;
     if (instance) delete instance ;
@@ -240,7 +235,7 @@ void MainWindow::on_Refresh_btn_clicked()
     refresh_start_station_combobox() ;
     refresh_arrival_station_combobox() ;
 
-    this->setEnabled(true);
+    spinbar->close_spin_loading_bar();
 }
 
 void MainWindow::on_EXIT_btn_clicked()

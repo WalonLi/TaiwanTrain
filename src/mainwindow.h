@@ -52,6 +52,7 @@ private:
     // member
     Ui::MainWindow *ui;
     ttp::ITrainBase *instance;
+    ttp::SpinBar *spinbar ;
 
 };
 

@@ -8,18 +8,19 @@
 #include <QtTest/QTest>
 #include <QObject>
 
-// class MainWindow ;
-
 namespace ttp
 {
 class SpinBar : public QObject
 {
     Q_OBJECT
 public :
-    explicit SpinBar(QWidget *m) : QObject(m)
-    {
-        ParentWidget = m ;
-    }
+    explicit SpinBar(QWidget *m) :
+        QObject(m),
+        ParentWidget(m),
+        Indicator(0),
+        View(0),
+        TimeLine(0),
+        Scene(0) {}
 
     ~SpinBar()
     {
@@ -39,43 +40,51 @@ public :
     {
         ParentWidget->setEnabled(false);
 
-        Scene = new QGraphicsScene();
-        Indicator = new BusyIndicator();
-        Scene->addItem(dynamic_cast<QGraphicsItem*>(Indicator));
-        // QGraphicsScene* m_scene = NULL;
+        if (!Indicator)
+            Indicator = new BusyIndicator();
 
-        View = new QGraphicsView(Scene, ParentWidget);
-        View->setMinimumHeight(100);
-        View->setMinimumWidth(100);
+        if (!Scene)
+        {
+            Scene = new QGraphicsScene();
+            Scene->addItem(dynamic_cast<QGraphicsItem*>(Indicator));
+        }
 
-        // None bolder style
-        View->setWindowFlags(Qt::FramelessWindowHint);
-        View->setStyleSheet("background: transparent;border:Opx");
+        if (!View)
+        {
+            View = new QGraphicsView(Scene, ParentWidget);
+            View->setMinimumHeight(100);
+            View->setMinimumWidth(100);
 
-        View->move((ParentWidget->width()-View->width())/2,
+            // None bolder style
+            View->setWindowFlags(Qt::FramelessWindowHint);
+            View->setStyleSheet("background: transparent;border:Opx");
+
+            View->move((ParentWidget->width()-View->width())/2,
                    (ParentWidget->height()-View->height())/2);
+        }
+
+        if (!TimeLine)
+        {
+            TimeLine = new QTimeLine(1000, ParentWidget);
+            TimeLine->setLoopCount(0);
+            TimeLine->setFrameRange(0, 36);
+            connect(TimeLine, SIGNAL(frameChanged(int)), this, SLOT(rotate_spinner(int)));
+        }
+
         View->show();
-
-        TimeLine = new QTimeLine(1000, ParentWidget);
-        TimeLine->setLoopCount(20);
-        TimeLine->setFrameRange(0, 36);
-
-        connect(TimeLine, SIGNAL(frameChanged(int)), this, SLOT(rotate_spinner(int)));
         TimeLine->start();
 
-        // QTest::qWait(1000) ;
+        QTest::qWait(1000) ;
     }
 
     void close_spin_loading_bar()
     {
-        // TimeLine->stop();
-        // View->close() ;
-        /*
-        delete Indicator ;
-        delete View ;
-        delete TimeLine ;
-        // delete Scene ;*/
-        ParentWidget->setEnabled(true);
+        if (TimeLine && View && ParentWidget)
+        {
+            TimeLine->stop();
+            View->close() ;
+            ParentWidget->setEnabled(true);
+        }
     }
 
 private slots:
