@@ -74,7 +74,7 @@ public :
         View->show();
         TimeLine->start();
 
-        QTest::qWait(1000) ;
+        QTest::qWait(500) ;
     }
 
     void close_spin_loading_bar()

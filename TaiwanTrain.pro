@@ -27,7 +27,8 @@ HEADERS  += src/mainwindow.h\
             src/THSR/THSR.h\
             src/basic.h\
             src/SpinBar/busyindicator.h \
-    src/SpinBar/spinbar.h
+    src/SpinBar/spinbar.h \
+    src/ActionThread.h
 
 FORMS    += UI/mainwindow.ui
 

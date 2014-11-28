@@ -6,6 +6,7 @@
 
 #include "THSR.h"
 #include <QDebug>
+#include <QtTest>
 #include <iostream>
 
 namespace ttp {
@@ -24,7 +25,7 @@ STATE THSR::parse_data_from_web()
     for(auto page_it = pages.begin() ; page_it != pages.end() ; ++page_it)
     {
         // Try to connect page.
-        if (connect_server(30) != STATE_SUCCESS)
+        if (connect_server(10) != STATE_SUCCESS)
             return STATE_NETWORK_ERROR ;
         boost::asio::ip::tcp::iostream & stream = get_stream() ;
 
@@ -42,12 +43,12 @@ STATE THSR::parse_data_from_web()
         string mHttpVer, data ;
         u_int mHttpCode ;
 
+        qDebug() << "Get"<< get_web_server().c_str() << (*page_it).c_str() <<"..." ;
         stream >> mHttpVer >> mHttpCode ;
-
         if (!stream || mHttpVer.substr(0,5) != "HTTP/" || mHttpCode != 200)
             return STATE_NETWORK_ERROR ;
         else
-            qDebug() << mHttpVer.c_str() << " " << mHttpCode << endl;
+            qDebug() << mHttpVer.c_str() << " " << mHttpCode << "OK" << endl;
 
 
         std::stringstream web_stream ;
@@ -93,8 +94,8 @@ STATE THSR::parse_data_from_web()
                 this->add_train_into_table(train) ;
             }
         }
-
         stream.close();
+        QTest::qWait(100) ;
     }
 
     return STATE_SUCCESS ;

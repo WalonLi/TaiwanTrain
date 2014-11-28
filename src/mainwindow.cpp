@@ -21,6 +21,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     spinbar = new SpinBar(this) ;
+
+    action = new ActionThread(0) ;
+    QObject::connect(action, SIGNAL(send_result_signal(int)),
+                     this, SLOT(get_result_slot(int))) ;
+
     this->setFixedSize(800,600);
     ui->setupUi(this);
 
@@ -33,6 +38,7 @@ MainWindow::~MainWindow()
 {
     delete ui ;
     delete instance ;
+    delete action ;
     delete spinbar ;
 }
 
@@ -137,6 +143,21 @@ STATE MainWindow::update_train_list_content()
     return STATE_SUCCESS ;
 }
 
+void MainWindow::get_result_slot(int state)
+{
+    if (state != STATE_SUCCESS)
+    {
+        show_popup_error_message(static_cast<STATE>(state)) ;
+    }
+    else
+    {
+        refresh_start_station_combobox() ;
+        refresh_arrival_station_combobox() ;
+    }
+
+    spinbar->close_spin_loading_bar();
+}
+
 void MainWindow::on_GO_btn_clicked()
 {
     STATE state ;
@@ -166,24 +187,17 @@ void MainWindow::on_GO_btn_clicked()
 
 void MainWindow::on_THSR_btn_clicked()
 {
-    spinbar->pop_up_spin_loading_bar();
-
-    STATE state ;
     if (instance) delete instance ;
 
+    spinbar->pop_up_spin_loading_bar();
     instance = new THSR() ;
-    state = instance->parse_data_from_web() ;
-    if ( state != STATE_SUCCESS)
-        return show_popup_error_message(state) ;
-
-    refresh_start_station_combobox() ;
-    refresh_arrival_station_combobox() ;
-
-    spinbar->close_spin_loading_bar();
+    action->set_train_type_instance(instance);
+    action->start();
 }
 
 void MainWindow::on_TRA_btn_clicked()
 {
+    /*
     spinbar->pop_up_spin_loading_bar();
 
     STATE state ;
@@ -194,10 +208,12 @@ void MainWindow::on_TRA_btn_clicked()
     refresh_arrival_station_combobox() ;
 
     spinbar->close_spin_loading_bar();
+    */
 }
 
 void MainWindow::on_TRTC_btn_clicked()
 {
+    /*
     spinbar->pop_up_spin_loading_bar() ;
 
     STATE state ;
@@ -208,10 +224,12 @@ void MainWindow::on_TRTC_btn_clicked()
     refresh_arrival_station_combobox() ;
 
     spinbar->close_spin_loading_bar();
+    */
 }
 
 void MainWindow::on_KRTC_btn_clicked()
 {
+    /*
     spinbar->pop_up_spin_loading_bar() ;
 
     STATE state ;
@@ -222,20 +240,27 @@ void MainWindow::on_KRTC_btn_clicked()
     refresh_arrival_station_combobox() ;
 
     spinbar->close_spin_loading_bar();
+    */
 }
 
 void MainWindow::on_Refresh_btn_clicked()
 {
-    spinbar->pop_up_spin_loading_bar() ;
+    ui->start_combo_box->clear();
+    ui->arrival_combo_box->clear();
+    ui->train_list_widget->clear();
+    ui->date_edit_box->setDate(QDate::currentDate());
 
-    STATE state ;
-    if (instance) delete instance ;
-
-    instance = 0 ;
-    refresh_start_station_combobox() ;
-    refresh_arrival_station_combobox() ;
-
-    spinbar->close_spin_loading_bar();
+    /*
+    spinbar->pop_up_spin_loading_bar();
+    action->set_train_type_instance(instance);
+    action->start();
+    */
+    /*
+    spinbar->pop_up_spin_loading_bar();
+    instance = new THSR() ;
+    action->set_train_type_instance(instance);
+    action->start();
+    */
 }
 
 void MainWindow::on_EXIT_btn_clicked()

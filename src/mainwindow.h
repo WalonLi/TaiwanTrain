@@ -6,6 +6,7 @@
 #include "ITrainBase.h"
 #include "THSR/THSR.h"
 #include "SpinBar/spinbar.h"
+#include "ActionThread.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +21,7 @@ public:
     ~MainWindow();
 
     Ui::MainWindow *get_ui_ptr(){return ui;} ;
+
 
 private slots:
     // button click signal function
@@ -37,7 +39,10 @@ private slots:
 
     void on_EXIT_btn_clicked();
 
-private :
+    void get_result_slot(int) ;
+
+private:
+
     // member function
     void show_popup_error_message(ttp::STATE st) ;
 
@@ -52,8 +57,8 @@ private:
     // member
     Ui::MainWindow *ui;
     ttp::ITrainBase *instance;
+    ttp::ActionThread *action ;
     ttp::SpinBar *spinbar ;
-
 };
 
 #endif // MAINWINDOW_H
