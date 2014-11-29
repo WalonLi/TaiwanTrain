@@ -45,6 +45,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::show_popup_error_message(STATE st)
 {
+    // close spin bar more carefully
     spinbar->close_spin_loading_bar();
 
     QMessageBox *msg = 0 ;
@@ -166,13 +167,15 @@ void MainWindow::on_GO_btn_clicked()
     if (ui->date_edit_box->date() < QDate::currentDate())
         return show_popup_error_message(STATE_DATE_TIME_ERROR) ;
 
+    /*
     // check focus train button
     if (!ui->btn_group_box->focusWidget())
         return show_popup_error_message(STATE_SELECT_TRAIN_ERROR) ;
+    */
 
     // check instance
     if (!instance)
-        return show_popup_error_message(STATE_DATA_ERROR) ;
+        return show_popup_error_message(STATE_SELECT_TRAIN_ERROR) ;
 
     // check combo box
     if (ui->start_combo_box->currentText() == ui->arrival_combo_box->currentText())
@@ -245,22 +248,23 @@ void MainWindow::on_KRTC_btn_clicked()
 
 void MainWindow::on_Refresh_btn_clicked()
 {
+    if (!instance) return  ;
+
+    // clear data.
     ui->start_combo_box->clear();
     ui->arrival_combo_box->clear();
     ui->train_list_widget->clear();
     ui->date_edit_box->setDate(QDate::currentDate());
 
-    /*
+    // start spin bar and parse web page again
     spinbar->pop_up_spin_loading_bar();
+    if (ITrainBase *t = dynamic_cast<THSR*>(instance))
+    {
+        delete instance ;
+        instance = new THSR() ;
+    }
     action->set_train_type_instance(instance);
     action->start();
-    */
-    /*
-    spinbar->pop_up_spin_loading_bar();
-    instance = new THSR() ;
-    action->set_train_type_instance(instance);
-    action->start();
-    */
 }
 
 void MainWindow::on_EXIT_btn_clicked()
