@@ -35,13 +35,16 @@ SOURCES += src/main.cpp\
            src/THSR/THSR.cpp\
            src/SpinBar/busyindicator.cpp
 
+
 HEADERS += src/mainwindow.h\
            src/ITrainBase.h\
            src/Train.h\
            src/THSR/THSR.h\
            src/basic.h\
-           src/SpinBar/busyindicator.h \
-           src/SpinBar/spinbar.h
+           src/SpinBar/busyindicator.h\
+           src/SpinBar/spinbar.h\
+           src/ActionThread.h
+
 
 FORMS   += UI/mainwindow.ui
 
