@@ -12,7 +12,6 @@
 #include "basic.h"
 #include "Train.h"
 
-
 namespace ttp
 {
 class ITrainBase
@@ -26,7 +25,7 @@ public:
     const vector<Train> & get_table() { return table; }
     const string & get_web_server() { return web_server; }
     const vector<string> & get_web_pages() { return web_pages; }
-    const vector<string> & get_station_map() { return station_map ; }
+    const vector< pair<int, string> > & get_station_map() { return station_map ; }
 
     // paring data method
     virtual STATE parse_data_from_web() = 0 ;
@@ -38,14 +37,15 @@ protected:
     // add page into pages
     void add_page_into_pages(const string a){ web_pages.push_back(a); }
 
-    STATE add_station_into_map(const string s)
+    STATE add_station_into_map(const string s, int id = 0)
     {
         if (s.empty()) return STATE_DATA_ERROR ;
 
-        for (auto it = station_map.begin() ; it != station_map.end() ; ++it)
-            if (!(*it).compare(s)) return STATE_SUCCESS ;
 
-        station_map.push_back(s);
+        for (auto it = station_map.begin() ; it != station_map.end() ; ++it)
+            if (!(*it).second.compare(s)) return STATE_SUCCESS ;
+
+        station_map.push_back(make_pair(id, s));
         return STATE_SUCCESS ;
     }
 
@@ -73,7 +73,7 @@ protected:
 
 private:
     boost::asio::ip::tcp::iostream asio_stream ;
-    vector<string> station_map ;
+    vector< pair<int, string> > station_map ;
     vector<Train> table ;
     string web_server ;
     vector<string> web_pages ;

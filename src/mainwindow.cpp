@@ -90,7 +90,7 @@ void MainWindow::refresh_start_station_combobox()
     if (!instance) return ;
     auto map = instance->get_station_map() ;
     for (auto it = map.begin() ; it != map.end() ; ++it)
-        ui->start_combo_box->addItem((*it).c_str());
+        ui->start_combo_box->addItem((*it).second.c_str());
 }
 
 void MainWindow::refresh_arrival_station_combobox()
@@ -100,7 +100,7 @@ void MainWindow::refresh_arrival_station_combobox()
     if (!instance) return ;
     auto map = instance->get_station_map() ;
     for (auto it = map.begin() ; it != map.end() ; ++it)
-        ui->arrival_combo_box->addItem((*it).c_str());
+        ui->arrival_combo_box->addItem((*it).second.c_str());
 }
 
 STATE MainWindow::update_train_list_content()
@@ -200,6 +200,13 @@ void MainWindow::on_THSR_btn_clicked()
 
 void MainWindow::on_TRA_btn_clicked()
 {
+    if (instance) delete instance ;
+
+    spinbar->pop_up_spin_loading_bar();
+    instance = new TRA() ;
+    action->set_train_type_instance(instance);
+    action->start();
+
     /*
     spinbar->pop_up_spin_loading_bar();
 

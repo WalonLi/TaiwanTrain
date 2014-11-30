@@ -5,6 +5,7 @@
 #include <QDebug>
 #include "ITrainBase.h"
 #include "THSR/THSR.h"
+#include "TRA/TRA.h"
 #include "SpinBar/spinbar.h"
 #include "ActionThread.h"
 

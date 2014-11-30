@@ -33,7 +33,8 @@ DEFINES += STATIC
 SOURCES += src/main.cpp\
            src/mainwindow.cpp\
            src/THSR/THSR.cpp\
-           src/SpinBar/busyindicator.cpp
+           src/SpinBar/busyindicator.cpp \
+           src/TRA/TRA.cpp
 
 
 HEADERS += src/mainwindow.h\
@@ -43,7 +44,8 @@ HEADERS += src/mainwindow.h\
            src/basic.h\
            src/SpinBar/busyindicator.h\
            src/SpinBar/spinbar.h\
-           src/ActionThread.h
+           src/ActionThread.h \
+           src/TRA/TRA.h
 
 
 FORMS   += UI/mainwindow.ui
