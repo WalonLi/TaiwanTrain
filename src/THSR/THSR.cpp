@@ -5,6 +5,7 @@
 **/
 
 #include "THSR.h"
+#include "boost/format.hpp"
 #include <QDebug>
 #include <QtTest>
 #include <iostream>
@@ -101,4 +102,45 @@ STATE THSR::parse_data_from_web()
     return STATE_SUCCESS ;
 }
 
+QStringList THSR::get_list_with_user_input(QDate date, QString start, QString arrival)
+{
+    QStringList list ;
+    string start_station = start.toStdString() ;
+    string arrival_station = arrival.toStdString() ;
+    vector<Train> table = get_table() ;
+
+
+    for (auto it = table.begin() ; it != table.end() ; ++it)
+    {
+        QTime *start_time = 0, *arrival_time = 0 ;
+        vector< pair<string, QTime> > schedule = (*it).get_schedule() ;
+        for (auto it2 = schedule.begin() ; it2 != schedule.end() ; ++it2)
+        {
+            // check time is legal.
+            if ((*it2).second.isNull()) continue ;
+
+            if (!(*it2).first.compare(start_station))
+                start_time = new QTime((*it2).second) ;
+            else if (!(*it2).first.compare(arrival_station) && start_time)
+                arrival_time = new QTime((*it2).second) ;
+
+            if (start_time && arrival_time) break ;
+        }
+
+
+        if (start_time && arrival_time)
+        {
+            string str = (boost::format("車號:%-10s出發:%-10s抵達:%-10s%s") \
+                                        % it->get_id().c_str() \
+                                        % start_time->toString("hh:mm").toStdString().c_str() \
+                                        % arrival_time->toString("hh:mm").toStdString().c_str()\
+                                        % it->get_help().c_str()).str() ;
+            list.push_back(str.c_str());
+        }
+
+        delete start_time ;
+        delete arrival_time ;
+    }
+    return list ;
+}
 }

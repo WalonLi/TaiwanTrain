@@ -30,6 +30,8 @@ public:
     // paring data method
     virtual STATE parse_data_from_web() = 0 ;
 
+    virtual QStringList get_list_with_user_input(QDate, QString, QString) = 0 ;
+
 protected:
     // get asio stream
     boost::asio::ip::tcp::iostream & get_stream() { return asio_stream; }

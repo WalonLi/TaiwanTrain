@@ -6,10 +6,10 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "boost/format.hpp"
 #include "SpinBar/spinbar.h"
 #include <QMessageBox>
-
+#include <QScrollBar>
+#include <QCompleter>
 
 
 using namespace ttp ;
@@ -31,7 +31,30 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // set default date is current date.
     ui->date_edit_box->setDate(QDate::currentDate());
-    // while(true) qDebug() <<"123";
+
+    ui->start_combo_box->view()->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded) ;
+
+    /*
+    QSizePolicy p = ui->start_combo_box->view()->sizePolicy() ;
+    p.setVerticalPolicy(QSizePolicy::MinimumExpanding);
+    ui->start_combo_box->view()->setSizePolicy(p);
+    */
+
+
+    /*
+    QListView view ;
+    ui->start_combo_box->setStyleSheet("QComboBox QAbstractItemView::item { \
+                                        min-height: 48px; min-widht: 60px; }");
+    */
+
+    /*
+    QAbstractItemView *qv = ui->start_combo_box->view() ;
+
+    QScrollBar *scrollbar = qv->verticalScrollBar() ;
+    scrollbar->setStyleSheet("QScrollBar::handle:vertical { min-height: 100px }");
+    scrollbar->show();
+    scrollbar->showNormal();
+    */
 }
 
 MainWindow::~MainWindow()
@@ -77,6 +100,11 @@ void MainWindow::show_popup_error_message(STATE st)
                               "Start/Arrival",
                               "起始站和抵達站無法相同。") ;
         break ;
+    case STATE_DATA_NOT_FOUND :
+        msg = new QMessageBox(QMessageBox::Warning,
+                              "No Data",
+                              "沒有資料。") ;
+        break ;
     }
 
     msg->exec() ;
@@ -105,42 +133,15 @@ void MainWindow::refresh_arrival_station_combobox()
 
 STATE MainWindow::update_train_list_content()
 {
-    string start_station = ui->start_combo_box->currentText().toStdString() ;
-    string arrival_station = ui->arrival_combo_box->currentText().toStdString() ;
-    vector<Train> table = instance->get_table() ;
-
     ui->train_list_widget->clear();
-    for (auto it = table.begin() ; it != table.end() ; ++it)
-    {
-        QTime *start_time = 0, *arrival_time = 0 ;
-        vector< pair<string, QTime> > schedule = (*it).get_schedule() ;
-        for (auto it2 = schedule.begin() ; it2 != schedule.end() ; ++it2)
-        {
-            // check time is legal.
-            if ((*it2).second.isNull()) continue ;
 
-            if (!(*it2).first.compare(start_station))
-                start_time = new QTime((*it2).second) ;
-            else if (!(*it2).first.compare(arrival_station) && start_time)
-                arrival_time = new QTime((*it2).second) ;
+    QStringList list = instance->get_list_with_user_input(ui->date_edit_box->date(),
+                                        ui->start_combo_box->currentText(),
+                                        ui->arrival_combo_box->currentText()) ;
 
-            if (start_time && arrival_time) break ;
-        }
+    if (list.isEmpty()) return STATE_DATA_NOT_FOUND ;
 
-        if (start_time && arrival_time)
-        {
-            string str = (boost::format("車號:%-10s出發:%-10s抵達:%-10s%s") \
-                                        % it->get_id().c_str() \
-                                        % start_time->toString("hh:mm").toStdString().c_str() \
-                                        % arrival_time->toString("hh:mm").toStdString().c_str()\
-                                        % it->get_help().c_str()).str() ;
-            ui->train_list_widget->addItem(str.c_str()) ;
-        }
-
-        delete start_time ;
-        delete arrival_time ;
-    }
-
+    ui->train_list_widget->addItems(list);
     return STATE_SUCCESS ;
 }
 
