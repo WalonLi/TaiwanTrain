@@ -32,29 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // set default date is current date.
     ui->date_edit_box->setDate(QDate::currentDate());
 
+    // set scroll bar
     ui->start_combo_box->view()->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded) ;
 
-    /*
-    QSizePolicy p = ui->start_combo_box->view()->sizePolicy() ;
-    p.setVerticalPolicy(QSizePolicy::MinimumExpanding);
-    ui->start_combo_box->view()->setSizePolicy(p);
-    */
-
-
-    /*
-    QListView view ;
-    ui->start_combo_box->setStyleSheet("QComboBox QAbstractItemView::item { \
-                                        min-height: 48px; min-widht: 60px; }");
-    */
-
-    /*
-    QAbstractItemView *qv = ui->start_combo_box->view() ;
-
-    QScrollBar *scrollbar = qv->verticalScrollBar() ;
-    scrollbar->setStyleSheet("QScrollBar::handle:vertical { min-height: 100px }");
-    scrollbar->show();
-    scrollbar->showNormal();
-    */
 }
 
 MainWindow::~MainWindow()
@@ -133,11 +113,15 @@ void MainWindow::refresh_arrival_station_combobox()
 
 STATE MainWindow::update_train_list_content()
 {
+    STATE state ;
+    QStringList list;
+
     ui->train_list_widget->clear();
 
-    QStringList list = instance->get_list_with_user_input(ui->date_edit_box->date(),
-                                        ui->start_combo_box->currentText(),
-                                        ui->arrival_combo_box->currentText()) ;
+    state = instance->get_list_with_user_input(ui->date_edit_box->date(),
+                            ui->start_combo_box->currentText().toStdString(),
+                            ui->arrival_combo_box->currentText().toStdString(),
+                            list) ;
 
     if (list.isEmpty()) return STATE_DATA_NOT_FOUND ;
 
@@ -193,6 +177,7 @@ void MainWindow::on_THSR_btn_clicked()
 {
     if (instance) delete instance ;
 
+    ui->train_list_widget->clear();
     spinbar->pop_up_spin_loading_bar();
     instance = new THSR() ;
     action->set_train_type_instance(instance);
@@ -203,6 +188,7 @@ void MainWindow::on_TRA_btn_clicked()
 {
     if (instance) delete instance ;
 
+    ui->train_list_widget->clear();
     spinbar->pop_up_spin_loading_bar();
     instance = new TRA() ;
     action->set_train_type_instance(instance);

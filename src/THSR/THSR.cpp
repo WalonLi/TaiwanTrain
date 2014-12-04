@@ -102,11 +102,8 @@ STATE THSR::parse_data_from_web()
     return STATE_SUCCESS ;
 }
 
-QStringList THSR::get_list_with_user_input(QDate date, QString start, QString arrival)
+STATE THSR::get_list_with_user_input(QDate date, string start, string arrival, QStringList & list)
 {
-    QStringList list ;
-    string start_station = start.toStdString() ;
-    string arrival_station = arrival.toStdString() ;
     vector<Train> table = get_table() ;
 
 
@@ -119,9 +116,9 @@ QStringList THSR::get_list_with_user_input(QDate date, QString start, QString ar
             // check time is legal.
             if ((*it2).second.isNull()) continue ;
 
-            if (!(*it2).first.compare(start_station))
+            if (!(*it2).first.compare(start))
                 start_time = new QTime((*it2).second) ;
-            else if (!(*it2).first.compare(arrival_station) && start_time)
+            else if (!(*it2).first.compare(arrival) && start_time)
                 arrival_time = new QTime((*it2).second) ;
 
             if (start_time && arrival_time) break ;
@@ -141,6 +138,6 @@ QStringList THSR::get_list_with_user_input(QDate date, QString start, QString ar
         delete start_time ;
         delete arrival_time ;
     }
-    return list ;
+    return STATE_SUCCESS ;
 }
 }

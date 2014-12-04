@@ -21,7 +21,7 @@ public:
 
     // virtual STATE connect_server( const int ) ;
     virtual STATE parse_data_from_web() ;
-    virtual QStringList get_list_with_user_input(QDate, QString, QString) ;
+    virtual STATE get_list_with_user_input(QDate, string, string, QStringList&) ;
 private:
 
 } ;
