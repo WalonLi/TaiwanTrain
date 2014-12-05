@@ -127,7 +127,7 @@ STATE THSR::get_list_with_user_input(QDate date, string start, string arrival, Q
 
         if (start_time && arrival_time)
         {
-            string str = (boost::format("車號:%-10s出發:%-10s抵達:%-10s%s") \
+            string str = (boost::format("車號:%s\t    出發:%-10s抵達:%-10s%s") \
                                         % it->get_id().c_str() \
                                         % start_time->toString("hh:mm").toStdString().c_str() \
                                         % arrival_time->toString("hh:mm").toStdString().c_str()\

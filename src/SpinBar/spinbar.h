@@ -1,3 +1,8 @@
+/**
+    Provide by Walon Li
+
+    File: spinbar.h
+**/
 #ifndef SPINBAR_H
 #define SPINBAR_H
 

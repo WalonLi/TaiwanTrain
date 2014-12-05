@@ -22,9 +22,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     spinbar = new SpinBar(this) ;
 
-    action = new ActionThread(0) ;
-    QObject::connect(action, SIGNAL(send_result_signal(int)),
-                     this, SLOT(get_result_slot(int))) ;
+    parse_action = new ParseAction(0) ;
+    QObject::connect(parse_action, SIGNAL(send_parse_action_result_signal(int)),
+                     this, SLOT(get_parse_action_result_slot(int))) ;
+
+    go_action = new GoAction(0) ;
+    QObject::connect(go_action, SIGNAL(send_go_action_result_signal(int, QStringList)),
+                     this, SLOT(get_go_action_result_slot(int, QStringList))) ;
 
     this->setFixedSize(800,600);
     ui->setupUi(this);
@@ -41,7 +45,7 @@ MainWindow::~MainWindow()
 {
     delete ui ;
     delete instance ;
-    delete action ;
+    delete parse_action ;
     delete spinbar ;
 }
 
@@ -111,25 +115,7 @@ void MainWindow::refresh_arrival_station_combobox()
         ui->arrival_combo_box->addItem((*it).second.c_str());
 }
 
-STATE MainWindow::update_train_list_content()
-{
-    STATE state ;
-    QStringList list;
-
-    ui->train_list_widget->clear();
-
-    state = instance->get_list_with_user_input(ui->date_edit_box->date(),
-                            ui->start_combo_box->currentText().toStdString(),
-                            ui->arrival_combo_box->currentText().toStdString(),
-                            list) ;
-
-    if (list.isEmpty()) return STATE_DATA_NOT_FOUND ;
-
-    ui->train_list_widget->addItems(list);
-    return STATE_SUCCESS ;
-}
-
-void MainWindow::get_result_slot(int state)
+void MainWindow::get_parse_action_result_slot(int state)
 {
     if (state != STATE_SUCCESS)
     {
@@ -140,6 +126,18 @@ void MainWindow::get_result_slot(int state)
         refresh_start_station_combobox() ;
         refresh_arrival_station_combobox() ;
     }
+
+    spinbar->close_spin_loading_bar();
+}
+
+void MainWindow::get_go_action_result_slot(int state, QStringList list)
+{
+    ui->train_list_widget->clear();
+
+    if (state != STATE_SUCCESS)
+        show_popup_error_message(static_cast<STATE>(state)) ;
+    else
+        ui->train_list_widget->addItems(list);
 
     spinbar->close_spin_loading_bar();
 }
@@ -166,10 +164,11 @@ void MainWindow::on_GO_btn_clicked()
     if (ui->start_combo_box->currentText() == ui->arrival_combo_box->currentText())
         return show_popup_error_message(STATE_START_ARRIVE_IS_SAME_ERROR) ;
 
-    state = update_train_list_content() ;
-    if (state != STATE_SUCCESS)
-        return show_popup_error_message(state) ;
-
+    spinbar->pop_up_spin_loading_bar();
+    go_action->set_user_input(instance, ui->date_edit_box->date(),
+                              ui->start_combo_box->currentText().toStdString(),
+                              ui->arrival_combo_box->currentText().toStdString());
+    go_action->start();
 }
 
 
@@ -180,8 +179,8 @@ void MainWindow::on_THSR_btn_clicked()
     ui->train_list_widget->clear();
     spinbar->pop_up_spin_loading_bar();
     instance = new THSR() ;
-    action->set_train_type_instance(instance);
-    action->start();
+    parse_action->set_train_type_instance(instance);
+    parse_action->start();
 }
 
 void MainWindow::on_TRA_btn_clicked()
@@ -191,8 +190,8 @@ void MainWindow::on_TRA_btn_clicked()
     ui->train_list_widget->clear();
     spinbar->pop_up_spin_loading_bar();
     instance = new TRA() ;
-    action->set_train_type_instance(instance);
-    action->start();
+    parse_action->set_train_type_instance(instance);
+    parse_action->start();
 
     /*
     spinbar->pop_up_spin_loading_bar();
@@ -257,8 +256,8 @@ void MainWindow::on_Refresh_btn_clicked()
         delete instance ;
         instance = new THSR() ;
     }
-    action->set_train_type_instance(instance);
-    action->start();
+    parse_action->set_train_type_instance(instance);
+    parse_action->start();
 }
 
 void MainWindow::on_EXIT_btn_clicked()

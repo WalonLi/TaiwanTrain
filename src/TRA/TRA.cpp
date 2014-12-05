@@ -92,14 +92,14 @@ STATE TRA::get_list_with_user_input(QDate date, string start, string arrival, QS
 
     const string info_pattern("</font><\/td><td align=\"center\" width=\"25\"\>") ;
     const string id_pattern("<a id=\"TrainCodeHyperLink\"");
-
+    const string type_pattern("<span id=\"classname\">") ;
     string cmd ;
     string search_type("searchtype=0") ;
     string from_city("fromcity=") ;
     string to_city("tocity=") ;
 
-    string from_station("fromstation=1008") ;
-    string to_station("tostation=1238") ;
+    string from_station("fromstation=") ;
+    string to_station("tostation=") ;
 
     string train_class("trainclass=2") ;
     string from_time("fromtime=0000") ;
@@ -109,7 +109,7 @@ STATE TRA::get_list_with_user_input(QDate date, string start, string arrival, QS
                                         % date.year() \
                                         % date.month() \
                                         % date.day()).str() ;
-    /*
+
     vector< pair<int, string> > st_map = get_station_map();
     for (auto it = st_map.begin() ; it != st_map.end() ; ++it)
     {
@@ -118,7 +118,7 @@ STATE TRA::get_list_with_user_input(QDate date, string start, string arrival, QS
         else if (!it->second.compare(arrival))
             to_station += (boost::format("%d") % it->first).str() ;
     }
-    */
+
     vector<string> pages = get_web_pages() ;
     cmd = pages[1].c_str() \
           + search_type + "&" \
@@ -164,14 +164,46 @@ STATE TRA::get_list_with_user_input(QDate date, string start, string arrival, QS
 
     std::stringstream web_stream ;
     web_stream << stream.rdbuf() ;
+    string id, type ;
     while (std::getline(web_stream, data))
     {
+
         data = ttp::trim(data) ;
         if (data.empty()) continue ;
-        qDebug() << data.c_str() ;
+
+
+        if (data.size() >= type_pattern.size() &&
+                 !data.substr(0, type_pattern.size()).compare(type_pattern))
+        {
+            vector<string> temp ;
+            boost::split(temp, data, boost::is_any_of("<>"), boost::token_compress_on) ;
+            type = temp[2] ;
+        }
+        else if (data.size() >= id_pattern.size() &&
+            !data.substr(0, id_pattern.size()).compare(id_pattern))
+        {
+            vector<string> temp ;
+            boost::split(temp, data, boost::is_any_of("<>"), boost::token_compress_on) ;
+            id = temp[2] ;
+        }
+        else if (data.size() >= info_pattern.size() &&
+                 !data.substr(0, info_pattern.size()).compare(info_pattern))
+        {
+            vector<string> temp ;
+            boost::split(temp, data, boost::is_any_of("<>"), boost::token_compress_on) ;
+            string str = (boost::format("車號:%s\t    出發:%-10s抵達:%-10s%s") \
+                                        % id.c_str() \
+                                        % temp[15].c_str() \
+                                        % temp[20].c_str()\
+                                        % type.c_str()).str() ;
+            list.push_back(str.c_str());
+            id.clear() ;
+            type.clear() ;
+            // 15, 20
+        }
     }
 
 
-    return STATE_SUCCESS ;
+    return list.empty() ? STATE_DATA_NOT_FOUND : STATE_SUCCESS ;
 }
 }

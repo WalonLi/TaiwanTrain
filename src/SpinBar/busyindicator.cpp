@@ -1,5 +1,5 @@
+
 #include "busyindicator.h"
- 
 #include <QConicalGradient>
 #include <QPainter>
 #include <QPainterPath>

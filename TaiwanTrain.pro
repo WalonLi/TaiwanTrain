@@ -44,8 +44,9 @@ HEADERS += src/mainwindow.h\
            src/basic.h\
            src/SpinBar/busyindicator.h\
            src/SpinBar/spinbar.h\
-           src/ActionThread.h \
-           src/TRA/TRA.h
+           src/TRA/TRA.h \
+           src/Action/ParseAction.h \
+           src/Action/GoAction.h
 
 
 FORMS   += UI/mainwindow.ui

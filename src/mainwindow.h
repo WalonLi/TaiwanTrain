@@ -7,7 +7,8 @@
 #include "THSR/THSR.h"
 #include "TRA/TRA.h"
 #include "SpinBar/spinbar.h"
-#include "ActionThread.h"
+#include "Action/ParseAction.h"
+#include "Action/GoAction.h"
 
 namespace Ui {
 class MainWindow;
@@ -40,7 +41,9 @@ private slots:
 
     void on_EXIT_btn_clicked();
 
-    void get_result_slot(int) ;
+    void get_parse_action_result_slot(int) ;
+
+    void get_go_action_result_slot(int, QStringList) ;
 
 private:
 
@@ -51,14 +54,13 @@ private:
 
     void refresh_arrival_station_combobox() ;
 
-    ttp::STATE update_train_list_content() ;
-
 
 private:
     // member
     Ui::MainWindow *ui;
     ttp::ITrainBase *instance;
-    ttp::ActionThread *action ;
+    ttp::ParseAction *parse_action ;
+    ttp::GoAction *go_action ;
     ttp::SpinBar *spinbar ;
 };
 
