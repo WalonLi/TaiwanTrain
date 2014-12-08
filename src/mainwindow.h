@@ -6,6 +6,7 @@
 #include "ITrainBase.h"
 #include "THSR/THSR.h"
 #include "TRA/TRA.h"
+#include "TRTC/TRTC.h"
 #include "SpinBar/spinbar.h"
 #include "Action/ParseAction.h"
 #include "Action/GoAction.h"

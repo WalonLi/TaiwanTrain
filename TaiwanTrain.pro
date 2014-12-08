@@ -34,8 +34,8 @@ SOURCES += src/main.cpp\
            src/mainwindow.cpp\
            src/THSR/THSR.cpp\
            src/SpinBar/busyindicator.cpp \
-           src/TRA/TRA.cpp
-
+           src/TRA/TRA.cpp \
+           src/TRTC/TRTC.cpp
 
 HEADERS += src/mainwindow.h\
            src/ITrainBase.h\
@@ -46,8 +46,8 @@ HEADERS += src/mainwindow.h\
            src/SpinBar/spinbar.h\
            src/TRA/TRA.h \
            src/Action/ParseAction.h \
-           src/Action/GoAction.h
-
+           src/Action/GoAction.h \
+           src/TRTC/TRTC.h
 
 FORMS   += UI/mainwindow.ui
 

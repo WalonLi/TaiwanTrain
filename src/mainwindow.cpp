@@ -9,7 +9,6 @@
 #include "SpinBar/spinbar.h"
 #include <QMessageBox>
 #include <QScrollBar>
-#include <QCompleter>
 
 
 using namespace ttp ;
@@ -38,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // set scroll bar
     ui->start_combo_box->view()->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded) ;
+    ui->arrival_combo_box->view()->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded) ;
 
 }
 
@@ -209,6 +209,13 @@ void MainWindow::on_TRA_btn_clicked()
 
 void MainWindow::on_TRTC_btn_clicked()
 {
+    if (instance) delete instance ;
+
+    ui->train_list_widget->clear();
+    spinbar->pop_up_spin_loading_bar();
+    instance = new TRTC() ;
+    parse_action->set_train_type_instance(instance);
+    parse_action->start();
     /*
     spinbar->pop_up_spin_loading_bar() ;
 
