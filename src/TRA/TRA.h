@@ -1,8 +1,10 @@
 /**
     Provide by Walon Li
 
-    File: THSR.h
+    File: TRA.h
 **/
+#ifndef TRA_H
+#define TRA_H
 
 #include "../ITrainBase.h"
 
@@ -26,3 +28,4 @@ private:
 
 } ;
 }
+#endif

@@ -1,11 +1,11 @@
 /**
     Provide by Walon Li
 
-    File: state.h
+    File: basic.h
 **/
 
-#ifndef STATE_H
-#define STATE_H
+#ifndef BASIC_H
+#define BASIC_H
 
 #include <string>
 #include <vector>

@@ -1,4 +1,6 @@
-
+/**
+    File: busyindicator.cpp
+**/
 #include "busyindicator.h"
 #include <QConicalGradient>
 #include <QPainter>

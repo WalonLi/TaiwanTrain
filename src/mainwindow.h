@@ -1,3 +1,9 @@
+/**
+    Provide by Walon Li
+
+    File: mainwindow.h
+**/
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 

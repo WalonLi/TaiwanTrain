@@ -1,7 +1,7 @@
 /**
     Provide by Walon Li
 
-    File: TRA.h
+    File: TRTC.cpp
 **/
 
 #include "TRTC.h"
@@ -85,11 +85,9 @@ STATE TRTC::parse_data_from_web()
 }
 STATE TRTC::get_list_with_user_input(QDate date, string start, string arrival, QStringList & list)
 {
-    /*
-    const string info_pattern("</font><\/td><td align=\"center\" width=\"25\"\>") ;
-    const string id_pattern("<a id=\"TrainCodeHyperLink\"");
-    const string type_pattern("<span id=\"classname\">") ;
-    */
+
+    const string match_pattern("<p align=\'right\'>") ;
+    const string text_pattern("font size=\'-1\'") ;
 
     string form_item ;
     string s1elect_item("s1elect=") ;
@@ -147,40 +145,55 @@ STATE TRTC::get_list_with_user_input(QDate date, string start, string arrival, Q
         data = ttp::trim(data) ;
         if (data.empty()) continue ;
 
-        qDebug() << data.c_str() ;
-        /*
-        if (data.size() >= type_pattern.size() &&
-                 !data.substr(0, type_pattern.size()).compare(type_pattern))
+        if (data.size() >= match_pattern.size() &&
+                 !data.substr(0, match_pattern.size()).compare(match_pattern))
         {
             vector<string> temp ;
             boost::split(temp, data, boost::is_any_of("<>"), boost::token_compress_on) ;
-            type = temp[2] ;
+            int count = 0 ;
+            string str ;
+            for (auto it = temp.begin() ; it != temp.end() ; ++it)
+            {
+                if (it->size() == text_pattern.size() && !it->compare(text_pattern))
+                {
+                    ++it ; // skip pattern
+                    // magic number.... Q__Q, we can not use tag to distinguish it.
+                    if (count < 3)
+                    {
+                        str += *it + "\t\t" ;
+                        if (count == 2)
+                        {
+                            list.push_back(str.c_str());
+                            str.clear();
+                        }
+                    }
+                    else if (count < 6)
+                    {
+                        str += *it + "\t\t" ;
+                        if (count == 5)
+                        {
+                            list.push_back(str.c_str());
+                            str.clear();
+                        }
+                    }
+                    else if (count < 9)
+                    {
+                        str += *it ;
+                        if (count == 8)
+                        {
+                            list.push_back(str.c_str());
+                            str.clear();
+                        }
+                    }
+
+                    count++ ;
+                }
+            }
+            break ;
         }
-        else if (data.size() >= id_pattern.size() &&
-            !data.substr(0, id_pattern.size()).compare(id_pattern))
-        {
-            vector<string> temp ;
-            boost::split(temp, data, boost::is_any_of("<>"), boost::token_compress_on) ;
-            id = temp[2] ;
-        }
-        else if (data.size() >= info_pattern.size() &&
-                 !data.substr(0, info_pattern.size()).compare(info_pattern))
-        {
-            vector<string> temp ;
-            boost::split(temp, data, boost::is_any_of("<>"), boost::token_compress_on) ;
-            string str = (boost::format("車號:%s\t    出發:%-10s抵達:%-10s%s") \
-                                        % id.c_str() \
-                                        % temp[15].c_str() \
-                                        % temp[20].c_str()\
-                                        % type.c_str()).str() ;
-            list.push_back(str.c_str());
-            id.clear() ;
-            type.clear() ;
-            // 15, 20
-        }
-        */
     }
 
     return list.empty() ? STATE_DATA_NOT_FOUND : STATE_SUCCESS ;
 }
+
 }

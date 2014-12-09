@@ -3,6 +3,8 @@
 
     File: THSR.h
 **/
+#ifndef THSR_H
+#define THSR_H
 
 #include "../ITrainBase.h"
 
@@ -26,3 +28,4 @@ private:
 
 } ;
 }
+#endif

@@ -1,8 +1,10 @@
 /**
     Provide by Walon Li
 
-    File: THSR.h
+    File: TRTC.h
 **/
+#ifndef TRTC_H
+#define TRTC_H
 
 #include "../ITrainBase.h"
 
@@ -14,7 +16,6 @@ public:
     explicit TRTC() : ITrainBase("web.trtc.com.tw")
     {
         this->add_page_into_pages("/c/2stainfo.asp") ;
-        // this->add_page_into_pages("/twrail/SearchResult.aspx?") ;
     }
 
     ~TRTC(){}
@@ -26,3 +27,4 @@ private:
 
 } ;
 }
+#endif

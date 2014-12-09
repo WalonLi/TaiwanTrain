@@ -1,7 +1,7 @@
 /**
     Provide by Walon Li
 
-    File: THSR.h
+    File: THSR.cpp
 **/
 
 #include "THSR.h"

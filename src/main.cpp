@@ -1,7 +1,7 @@
 /**
     Provide by Walon Li
 
-    File: THSR.h
+    File: main.cpp
 **/
 
 #include "mainwindow.h"

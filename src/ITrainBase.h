@@ -4,8 +4,8 @@
     File: ITrainBase.h
 **/
 
-#ifndef ITRAIN_BASE_H
-#define ITRAIN_BASE_H
+#ifndef ITRAINBASE_H
+#define ITRAINBASE_H
 
 #include <string>
 #include "boost/asio.hpp"

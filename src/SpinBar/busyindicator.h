@@ -1,4 +1,6 @@
-
+/**
+    File: busyindicator.h
+**/
 #ifndef BUSYINDICATOR_H
 #define BUSYINDICATOR_H
  
