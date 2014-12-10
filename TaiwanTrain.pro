@@ -25,9 +25,16 @@ win32-g++* {
                    -lws2_32
     PRE_TARGETDEPS += G:/boost_1_56_0/stage/lib/libboost_filesystem-$${COMPILER}-mt-$${Boost_VERSION}.a \
                       G:/boost_1_56_0/stage/lib/libboost_system-$${COMPILER}-mt-$${Boost_VERSION}.a
+
+    QMAKE_CXXFLAGS += -mwindows
+
+    QMAKE_LFLAGS += $$QMAKE_LFLAGS_WINDOWS
+
+    QMAKE_LFLAGS_CONSOLE =
 }
 
 CONFIG  += c++11
+
 DEFINES += STATIC
 
 SOURCES += src/main.cpp\
