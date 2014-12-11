@@ -13,6 +13,7 @@
 #include "THSR/THSR.h"
 #include "TRA/TRA.h"
 #include "TRTC/TRTC.h"
+#include "KRTC/KRTC.h"
 #include "SpinBar/spinbar.h"
 #include "Action/ParseAction.h"
 #include "Action/GoAction.h"
