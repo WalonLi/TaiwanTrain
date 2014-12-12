@@ -192,19 +192,6 @@ void MainWindow::on_TRA_btn_clicked()
     instance = new TRA() ;
     parse_action->set_train_type_instance(instance);
     parse_action->start();
-
-    /*
-    spinbar->pop_up_spin_loading_bar();
-
-    STATE state ;
-    if (instance) delete instance ;
-
-    instance = 0 ;
-    refresh_start_station_combobox() ;
-    refresh_arrival_station_combobox() ;
-
-    spinbar->close_spin_loading_bar();
-    */
 }
 
 void MainWindow::on_TRTC_btn_clicked()
@@ -216,34 +203,17 @@ void MainWindow::on_TRTC_btn_clicked()
     instance = new TRTC() ;
     parse_action->set_train_type_instance(instance);
     parse_action->start();
-    /*
-    spinbar->pop_up_spin_loading_bar() ;
-
-    STATE state ;
-    if (instance) delete instance ;
-
-    instance = 0 ;
-    refresh_start_station_combobox() ;
-    refresh_arrival_station_combobox() ;
-
-    spinbar->close_spin_loading_bar();
-    */
 }
 
 void MainWindow::on_KRTC_btn_clicked()
 {
-    /*
-    spinbar->pop_up_spin_loading_bar() ;
-
-    STATE state ;
     if (instance) delete instance ;
 
-    instance = 0 ;
-    refresh_start_station_combobox() ;
-    refresh_arrival_station_combobox() ;
-
-    spinbar->close_spin_loading_bar();
-    */
+    ui->train_list_widget->clear();
+    spinbar->pop_up_spin_loading_bar();
+    instance = new KRTC() ;
+    parse_action->set_train_type_instance(instance);
+    parse_action->start();
 }
 
 void MainWindow::on_Refresh_btn_clicked()
