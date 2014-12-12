@@ -56,11 +56,10 @@ STATE KRTC::parse_data_from_web()
     {
         // clean white space
         data = ttp::trim(data) ;
-        if (data.empty() || data.size() < match_pattern.size())
-            continue ;
+        if (data.empty()) continue ;
 
         // match pattern "opt group"
-        if (!data.substr(0, match_pattern.size()).compare(match_pattern))
+        if (PREFIX_COMPARE(match_pattern, data))
         {
             vector<string> vec ;
             boost::split(vec, data, boost::is_any_of("\""), boost::token_compress_on) ;
@@ -76,19 +75,25 @@ STATE KRTC::parse_data_from_web()
             }
         }
 
-        if ( data.size() >= view_pattern.size() && !data.substr(0, view_pattern.size()).compare(view_pattern))
+        if (PREFIX_COMPARE(view_pattern, data))
         {
             vector<string> vec ;
             boost::split(vec, data, boost::is_any_of("\""), boost::token_compress_on) ;
             view_state = vec[7];
+            // convert to html style
+            view_state =  boost::replace_all_copy(view_state, "/", "%2F")  ;
+            view_state =  boost::replace_all_copy(view_state, "+", "%2B")  ;
         }
 
 
-        if ( data.size() >= validate_pattern.size() && !data.substr(0, validate_pattern.size()).compare(validate_pattern))
+        if (PREFIX_COMPARE(validate_pattern, data))
         {
             vector<string> vec ;
             boost::split(vec, data, boost::is_any_of("\""), boost::token_compress_on) ;
             validate = vec[7] ;
+            // convert to html style
+            validate =  boost::replace_all_copy(validate, "/", "%2F")  ;
+            validate =  boost::replace_all_copy(validate, "+", "%2B")  ;
         }
 
     }
@@ -103,8 +108,12 @@ STATE KRTC::parse_data_from_web()
 STATE KRTC::get_list_with_user_input(QDate date, string start, string arrival, QStringList & list)
 {
 
-    const string match_pattern("<p align=\'right\'>") ;
-    const string text_pattern("font size=\'-1\'") ;
+    const string card_pattern("單程票\t\t普卡\t\t學生卡\t\t社福卡") ;
+    const string single_pattern("<td align=\"right\"><span id=\"lblTicket\">") ;
+    const string regular_pattern("<td align=\"right\"><span id=\"lblTicket1\">") ;
+    const string student_pattern("<td align=\"right\"><span id=\"lblTicket3\">") ;
+    const string welfare_pattern("<td align=\"right\"><span id=\"lblTicket2\">") ;
+    const string shipping_pattern("<td align=\"right\"><span id=\"lblShipping\">") ;
 
     string form_item ;
     string ScriptMgr("ScriptManager1=UpdatePanel1|button3") ;
@@ -116,7 +125,7 @@ STATE KRTC::get_list_with_user_input(QDate date, string start, string arrival, Q
     string EventValidate("__EVENTVALIDATION=") ;
     string ddlstation1("ddlStation1=") ;
     string ddlstation2("ddlStation2=") ;
-    string AsyncPost("__ASYNCPOST=true") ;
+    string AsyncPost("__ASYNCPOST=false") ;
 
     vector< pair<int, string> > st_map = get_station_map();
     for (auto it = st_map.begin() ; it != st_map.end() ; ++it)
@@ -178,66 +187,35 @@ STATE KRTC::get_list_with_user_input(QDate date, string start, string arrival, Q
     else
         qDebug() << mHttpVer.c_str() << " " << mHttpCode << "OK" << endl;
 
+    string price, ship_time ;
     std::stringstream web_stream ;
     web_stream << stream.rdbuf() ;
-    string id, type ;
     while (std::getline(web_stream, data))
     {
-
         data = ttp::trim(data) ;
         if (data.empty()) continue ;
 
-        qDebug() << data.c_str() ;
-#if 0
-        if (data.size() >= match_pattern.size() &&
-                 !data.substr(0, match_pattern.size()).compare(match_pattern))
+        if (PREFIX_COMPARE(single_pattern, data)
+            || PREFIX_COMPARE(regular_pattern, data)
+            || PREFIX_COMPARE(student_pattern, data)
+            || PREFIX_COMPARE(welfare_pattern, data))
         {
             vector<string> temp ;
             boost::split(temp, data, boost::is_any_of("<>"), boost::token_compress_on) ;
-            int count = 0 ;
-            string str ;
-            for (auto it = temp.begin() ; it != temp.end() ; ++it)
-            {
-                if (it->size() == text_pattern.size() && !it->compare(text_pattern))
-                {
-                    ++it ; // skip pattern
-                    // magic number.... Q__Q, we can not use tag to distinguish it.
-                    if (count < 3)
-                    {
-                        str += *it + "\t\t" ;
-                        if (count == 2)
-                        {
-                            list.push_back(str.c_str());
-                            str.clear();
-                        }
-                    }
-                    else if (count < 6)
-                    {
-                        str += *it + "\t\t" ;
-                        if (count == 5)
-                        {
-                            list.push_back(str.c_str());
-                            str.clear();
-                        }
-                    }
-                    else if (count < 9)
-                    {
-                        str += *it ;
-                        if (count == 8)
-                        {
-                            list.push_back(str.c_str());
-                            str.clear();
-                        }
-                    }
-
-                    count++ ;
-                }
-            }
-            break ;
+            price += temp[3].c_str() ;
+            if (!PREFIX_COMPARE(welfare_pattern, data)) price += "\t\t" ;
         }
-#endif
+        else if (PREFIX_COMPARE(shipping_pattern, data))
+        {
+            vector<string> temp ;
+            boost::split(temp, data, boost::is_any_of("<>"), boost::token_compress_on) ;
+            ship_time = (boost::format("註：站間行駛時間約%s鐘")% temp[3].c_str()).str();
+        }
     }
 
+    list.push_back(card_pattern.c_str());
+    list.push_back(price.c_str());
+    list.push_back(ship_time.c_str());
     return list.empty() ? STATE_DATA_NOT_FOUND : STATE_SUCCESS ;
 }
 

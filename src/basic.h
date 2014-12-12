@@ -27,6 +27,10 @@ enum STATE
 #define CHECK_SUCCESS(x) ((x==STATE_SUCCESS) ? true : false)
 #define IS_LEGAL_TIME(x) ((x.hour() >= 24 && x.minute() >= 0) ? false : true)
 
+//(!data.substr(0, match_pattern.size()).compare(match_pattern))
+#define PREFIX_COMPARE(prefix, str) ((str.size()>=prefix.size() \
+                                    && !str.substr(0, prefix.size()).compare(prefix)) ? true : false)
+
 static std::string & trim(std::string & s)
 {
     if (s.empty()) return s ;

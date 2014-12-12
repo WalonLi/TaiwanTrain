@@ -54,11 +54,10 @@ STATE TRA::parse_data_from_web()
     {
         // clean white space
         data = ttp::trim(data) ;
-        if (data.empty() || data.size() < match_pattern.size())
-            continue ;
+        if (data.empty()) continue ;
 
         // match pattern "<script>"
-        if (!data.substr(0, match_pattern.size()).compare(match_pattern))
+        if (PREFIX_COMPARE(match_pattern, data))
         {
             vector<string> vec ;
             boost::split(vec, data, boost::is_any_of("<>;"), boost::token_compress_on) ;
@@ -171,23 +170,19 @@ STATE TRA::get_list_with_user_input(QDate date, string start, string arrival, QS
         data = ttp::trim(data) ;
         if (data.empty()) continue ;
 
-
-        if (data.size() >= type_pattern.size() &&
-                 !data.substr(0, type_pattern.size()).compare(type_pattern))
+        if (PREFIX_COMPARE(type_pattern, data))
         {
             vector<string> temp ;
             boost::split(temp, data, boost::is_any_of("<>"), boost::token_compress_on) ;
             type = temp[2] ;
         }
-        else if (data.size() >= id_pattern.size() &&
-            !data.substr(0, id_pattern.size()).compare(id_pattern))
+        else if (PREFIX_COMPARE(id_pattern, data))
         {
             vector<string> temp ;
             boost::split(temp, data, boost::is_any_of("<>"), boost::token_compress_on) ;
             id = temp[2] ;
         }
-        else if (data.size() >= info_pattern.size() &&
-                 !data.substr(0, info_pattern.size()).compare(info_pattern))
+        else if (PREFIX_COMPARE(info_pattern, data))
         {
             vector<string> temp ;
             boost::split(temp, data, boost::is_any_of("<>"), boost::token_compress_on) ;

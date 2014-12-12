@@ -63,7 +63,7 @@ STATE THSR::parse_data_from_web()
 
 
             // match pattern "<tr bgcolor"
-            if (!data.substr(0, match_pattern.size()).compare(match_pattern))
+            if (PREFIX_COMPARE(match_pattern, data))
             {
                 std::getline(web_stream, data) ;
                 data = ttp::trim(data) ;

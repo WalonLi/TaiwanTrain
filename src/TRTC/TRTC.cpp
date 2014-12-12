@@ -54,18 +54,17 @@ STATE TRTC::parse_data_from_web()
     {
         // clean white space
         data = ttp::trim(data) ;
-        if (data.empty() || data.size() < optgroup_pattern.size())
-            continue ;
+        if (data.empty()) continue ;
 
         // match pattern "opt group"
-        if (!data.substr(0, optgroup_pattern.size()).compare(optgroup_pattern))
+        if (PREFIX_COMPARE(optgroup_pattern, data))
         {
             vector<string> vec ;
             boost::split(vec, data, boost::is_any_of("<>"), boost::token_compress_on) ;
             for ( auto it = vec.begin() ; it != vec.end() ; ++it )
             {
                 // match option
-                if (!(*it).substr(0, option_pattern.size()).compare(option_pattern))
+                if (PREFIX_COMPARE(option_pattern, (*it)))
                 {
                     vector<string> temp ;
                     boost::split(temp, *it++, boost::is_any_of("\'"), boost::token_compress_on) ;
@@ -138,15 +137,12 @@ STATE TRTC::get_list_with_user_input(QDate date, string start, string arrival, Q
 
     std::stringstream web_stream ;
     web_stream << stream.rdbuf() ;
-    string id, type ;
     while (std::getline(web_stream, data))
     {
-
         data = ttp::trim(data) ;
         if (data.empty()) continue ;
 
-        if (data.size() >= match_pattern.size() &&
-                 !data.substr(0, match_pattern.size()).compare(match_pattern))
+        if (PREFIX_COMPARE(match_pattern, data))
         {
             vector<string> temp ;
             boost::split(temp, data, boost::is_any_of("<>"), boost::token_compress_on) ;
