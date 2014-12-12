@@ -233,6 +233,22 @@ void MainWindow::on_Refresh_btn_clicked()
         delete instance ;
         instance = new THSR() ;
     }
+    else if (ITrainBase *t = dynamic_cast<TRA*>(instance))
+    {
+        delete instance ;
+        instance = new TRA() ;
+    }
+    else if (ITrainBase *t = dynamic_cast<TRTC*>(instance))
+    {
+        delete instance ;
+        instance = new TRTC() ;
+    }
+    else if (ITrainBase *t = dynamic_cast<KRTC*>(instance))
+    {
+        delete instance ;
+        instance = new KRTC() ;
+    }
+
     parse_action->set_train_type_instance(instance);
     parse_action->start();
 }
