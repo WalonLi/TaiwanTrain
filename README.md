@@ -1,13 +1,17 @@
-TaiwanTrain
+#TaiwanTrain
 ===========
 
-It's a simple application to inquiry Taiwan Rail way timeline !
+###It's a simple application to inquiry Taiwan Rail way timeline !
 
-Owner: WalonLi
+#####Owner: WalonLi
 
-Platform: Linux/Windows
+#####Platform: Linux/Windows
 
-Framework: Boost_1.56.0 Qt5.2
+#####Framework: Boost_1.56.0 Qt5.3
+
+#####Compiler: gcc 4.8
+
+====
 
 模仿HTTP protocol，傳送 Get  和Post request來爬網頁上的資料去得火車/捷運的時刻表和車資
 
